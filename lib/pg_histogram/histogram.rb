@@ -19,7 +19,7 @@ module PgHistogram
           @min = options[:min] || 0
           @max = options[:max]
           @buckets = options[:buckets]
-          @bucket_size = calculate_bucket_size
+          @bucket_size = (@max - @min).to_f / @buckets
         else
           @min = options[:min]
           @max = options[:max]
@@ -58,10 +58,6 @@ module PgHistogram
 
     def source_max
       @source_max ||= subquery.maximum(pure_column(true))
-    end
-
-    def calculate_bucket_size
-      (source_max - source_min).to_f / @buckets
     end
 
     def num_buckets
